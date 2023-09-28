@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -18,4 +20,6 @@ public class Tag {
     private Long id;
     private String name;
 
+    @ManyToMany(mappedBy = "tagList")
+    private List<Product> productList;
 }

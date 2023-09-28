@@ -25,9 +25,10 @@ public class Product {
     private Category category;
 
     @ManyToMany
-    @JoinTable(name = "product_tag",
-            joinColumns = @JoinColumn(name = "product_id",
-            )
+    @JoinTable(
+            name = "product_tag",
+            joinColumns = @JoinColumn(name = "tag_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
     )
     private List<Tag> tagList;
 }
