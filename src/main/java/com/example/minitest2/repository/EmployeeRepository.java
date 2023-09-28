@@ -36,7 +36,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     // 3. Tìm tất cả các Employee theo lastName và sắp xếp thứ tự theo firstName tăng dần
     // Method query
-    List<Employee> findByLastNameOrOrderByFirstNameAsc(String lastName);
+    List<Employee> findByLastNameOrderByFirstNameAsc(String lastName);
 
     // Native query
     @Query(nativeQuery = true, value = "select * from employee e where e.lastName = ?1 order by e.firstName asc")
