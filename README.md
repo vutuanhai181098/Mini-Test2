@@ -191,3 +191,171 @@ Trả lời:
 
 ### Câu 11:
 
+### Câu 12:
+Cho class `User.java` như sau
+```java
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name="user")
+public class User {
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
+   private Long id;
+   private String name;
+   private String email;
+   private String password;
+}
+```
+Viết câu lệnh query để tìm kiếm UserDto bao gồm các thuộc tính (id, name, email) theo cách sau (mỗi cách 1 câu lệnh truy vấn)
+
+1. Method query
+
+```java
+public class UserService {
+  private final UserRepository userRepository;
+  
+  public UserService(UserRepository userRepository){
+      this.userRepository = userRepository;
+  }
+
+  public UserDto getUserById(Long id) {
+    User user = userRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Not found user"));
+    return UserDto.builder()
+            .id(user.getId())
+            .name(user.getName())
+            .email(user.getEmail())
+            .build();
+  }
+}
+```
+2. JPQL Query
+```java
+public interface UserRepository extends JpaRepository<User, Long> {
+    @Query("select new com.example.minitest2.dto.UserDto(u.id, u.name, u.email) from User u where u.id = :id")
+    UserDto getUserByIdJPQL(@Param("id") Long id);
+}
+```
+3. Native Query
+```java
+@NamedNativeQuery(
+        name = "getUserByIdNQ",
+        query = "SELECT u.id, u.name, u.email FROM user u where u.id = ?1",
+        resultClass = UserDto.class
+)
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "user")
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+    private String email;
+    private String password;
+}
+```
+```java
+public interface UserRepository extends JpaRepository<User, Long> {
+    @Query(nativeQuery = true, name = "getUserByIdNQ")
+    UserDto getUserByIdNQ(Long id);
+}
+```
+4. Projection
+```java
+public interface UserProjection {
+    Long getId();
+    String getName();
+    String getEmail();
+
+    @RequiredArgsConstructor
+    class UserProjectionImpl implements UserProjection{
+        private final User user;
+
+        @Override
+        public Long getId() {
+            return this.user.getId();
+        }
+
+        @Override
+        public String getName() {
+            return this.user.getName();
+        }
+
+        @Override
+        public String getEmail() {
+            return this.user.getEmail();
+        }
+    }
+    static UserProjection of(User user){
+        return new UserProjectionImpl(user);
+    }
+}
+```
+```java
+public interface UserRepository extends JpaRepository<User, Long> {
+    // Projection
+    <T> T findById(Long id, Class<T> type);
+}
+```
+### Câu 13:
+Cho class `Post.java` như sau:
+```java
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name="post")
+public class Post {
+   @Id
+   private String id;
+   private String title;
+}
+```
+Viết custom generate id để tạo id ngẫu nhiên cho đối tượng post ở trên
+
+Chú ý custom generate id ở đây là tự động tạo ID giống như @GeneratedValue, chúng ta không cần tự set ID thủ công cho Entity mà ID sẽ được tự động thêm vào
+
+Trả lời:
+
+```java
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "post")
+public class Post {
+    @Id
+    private String id;
+    private String title;
+
+    // Constructor
+    public Post(String title){
+        this.id = generateUniqueId();
+        this.title = title;
+    }
+
+    private String generateUniqueId(){
+        return UUID.randomUUID().toString();
+    }
+    /*
+    ---Sử dụng @PrePersist
+
+    public Post(String title){
+        this.title = title;
+    }
+    @PrePersist
+    void beforeSave(){
+        id = generateUniqueId();
+    }
+    */
+}
+```
