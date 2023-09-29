@@ -15,7 +15,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     List<Employee> findByEmailAndLastName(String email, String lastName);
 
     // Native query
-    @Query(nativeQuery = true, value = "Select * from employee e where e.email = :email and e.lastName = :lastName")
+    @Query(nativeQuery = true, value = "Select * from employee e where e.email = :email and e.last_name = :lastName")
     List<Employee> getByEmailAndLastNameNQ(@Param("email") String email,@Param("lastName") String lastName);
 
     // JPQL query
@@ -27,7 +27,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     List<Employee> findDistinctByFirstNameOrLastName(String firstName, String lastName);
 
     // Native query
-    @Query(nativeQuery = true, value = "select distinct * from employee e where e.firstName = ?1 or e.lastName = ?2")
+    @Query(nativeQuery = true, value = "select distinct * from employee e where e.first_name = ?1 or e.last_name = ?2")
     List<Employee> getDistinctByFirstNameOrLastNameNQ(String firstName, String lastName);
 
     // JPQL query
@@ -39,7 +39,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     List<Employee> findByLastNameOrderByFirstNameAsc(String lastName);
 
     // Native query
-    @Query(nativeQuery = true, value = "select * from employee e where e.lastName = ?1 order by e.firstName asc")
+    @Query(nativeQuery = true, value = "select * from employee e where e.last_name = ?1 order by e.first_name asc")
     List<Employee> getByLastNameOrderByFirstNameAscNQ(String lastName);
 
     // JPQL query
@@ -54,9 +54,9 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     // Chứa firstName
     List<Employee> findByFirstNameContainingIgnoreCase(String firstName);
     // Native query
-    @Query(nativeQuery = true, value = "select * from employee e where lower(e.firstName) = lower(?1)")
+    @Query(nativeQuery = true, value = "select * from employee e where lower(e.first_name) = lower(?1)")
     List<Employee> getByFirstNameIgnoreCaseNQ(String firstName);
-    @Query(nativeQuery = true, value = "select * from employee e where lower(e.firstName) like lower(concat('%', ?1, '%'))")
+    @Query(nativeQuery = true, value = "select * from employee e where lower(e.first_name) like lower(concat('%', ?1, '%'))")
     List<Employee> getByFirstNameContainingIgnoreCaseNQ(String firstName);
 
     // JPQL query

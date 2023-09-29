@@ -121,64 +121,72 @@ Giả sử có 1 class **Employee** với các fields sau **{id, emailAddress, f
 
 1. Tìm tất cả các Employee theo emailAddress và lastName.
 ```java
-// Method query
-List<Employee> findByEmailAndLastName(String email, String lastName);
+public interface EmployeeRepository extends JpaRepository<Employee, Long> {
+    // Method query
+    List<Employee> findByEmailAndLastName(String email, String lastName);
 
-// Native query
-@Query(nativeQuery = true, value = "Select * from employee e where e.email = :email and e.lastName = :lastName")
-List<Employee> getByEmailAndLastNameNQ(@Param("email") String email,@Param("lastName") String lastName);
+    // Native query
+    @Query(nativeQuery = true, value = "Select * from employee e where e.email = :email and e.last_name = :lastName")
+    List<Employee> getByEmailAndLastNameNQ(@Param("email") String email, @Param("lastName") String lastName);
 
-// JPQL query
-@Query("select e from Employee e where e.email = :email and e.lastName = :lastName")
-List<Employee> getByEmailAndLastNameJPQL(@Param("email") String email,@Param("lastName") String lastName);
+    // JPQL query
+    @Query("select e from Employee e where e.email = :email and e.lastName = :lastName")
+    List<Employee> getByEmailAndLastNameJPQL(@Param("email") String email, @Param("lastName") String lastName);
+}
 ```
 2. Tìm tất cả các Employee khác nhau theo firstName hoặc lastName.
 ```java
-// Method query
-List<Employee> findDistinctByFirstNameOrLastName(String firstName, String lastName);
+public interface EmployeeRepository extends JpaRepository<Employee, Long> {
+    // Method query
+    List<Employee> findDistinctByFirstNameOrLastName(String firstName, String lastName);
 
-// Native query
-@Query(nativeQuery = true, value = "select distinct * from employee e where e.firstName = ?1 or e.lastName = ?2")
-List<Employee> getDistinctByFirstNameOrLastNameNQ(String firstName, String lastName);
+    // Native query
+    @Query(nativeQuery = true, value = "select distinct * from employee e where e.first_name = ?1 or e.last_name = ?2")
+    List<Employee> getDistinctByFirstNameOrLastNameNQ(String firstName, String lastName);
 
-// JPQL query
-@Query("select distinct e from Employee e where e.firstName = ?1 or e.lastName = ?2")
-List<Employee> getDistinctByFirstNameOrLastNameJPQL(String firstName, String lastName);
+    // JPQL query
+    @Query("select distinct e from Employee e where e.firstName = ?1 or e.lastName = ?2")
+    List<Employee> getDistinctByFirstNameOrLastNameJPQL(String firstName, String lastName);
+}
 ```
 3. Tìm tất cả các Employee theo lastName và sắp xếp thứ tự theo firstName tăng dần.
 ```java
-// Method query
-List<Employee> findByLastNameOrderByFirstNameAsc(String lastName);
+public interface EmployeeRepository extends JpaRepository<Employee, Long> {
+    // Method query
+    List<Employee> findByLastNameOrderByFirstNameAsc(String lastName);
 
-// Native query
-@Query(nativeQuery = true, value = "select * from employee e where e.lastName = ?1 order by e.firstName asc")
-List<Employee> getByLastNameOrderByFirstNameAscNQ(String lastName);
+    // Native query
+    @Query(nativeQuery = true, value = "select * from employee e where e.last_name = ?1 order by e.first_name asc")
+    List<Employee> getByLastNameOrderByFirstNameAscNQ(String lastName);
 
-// JPQL query
-@Query("select e from Employee e where e.lastName = ?1 order by e.firstName asc")
-List<Employee> getByLastNameOrderByFirstNameAscJPQL(String lastName);
+    // JPQL query
+    @Query("select e from Employee e where e.lastName = ?1 order by e.firstName asc")
+    List<Employee> getByLastNameOrderByFirstNameAscJPQL(String lastName);
+}
 ```
 4. Tìm tất cả các Employee theo fistName không phân biệt hoa thường.
 ```java
-// Method query
-// Theo firstName
-List<Employee> findByFirstNameIgnoreCase(String firstName);
-// Chứa firstName
-List<Employee> findByFirstNameContainingIgnoreCase(String firstName);
-    
-// Native query
-@Query(nativeQuery = true, value = "select * from employee e where lower(e.firstName) = lower(?1)")
-List<Employee> getByFirstNameIgnoreCaseNQ(String firstName);
+public interface EmployeeRepository extends JpaRepository<Employee, Long> {
+    // Method query
+    // Theo firstName
+    List<Employee> findByFirstNameIgnoreCase(String firstName);
+    // Chứa firstName
+    List<Employee> findByFirstNameContainingIgnoreCase(String firstName);
 
-@Query(nativeQuery = true, value = "select * from employee e where lower(e.firstName) like lower(concat('%', ?1, '%'))")
-List<Employee> getByFirstNameContainingIgnoreCaseNQ(String firstName);
+    // Native query
+    @Query(nativeQuery = true, value = "select * from employee e where lower(e.first_name) = lower(?1)")
+    List<Employee> getByFirstNameIgnoreCaseNQ(String firstName);
 
-// JPQL query
-@Query("select e from Employee e where lower(e.firstName) = lower(?1)")
-List<Employee> getByFirstNameIgnoreCaseJPQL(String firstName);
+    @Query(nativeQuery = true, value = "select * from employee e where lower(e.first_name) like lower(concat('%', ?1, '%'))")
+    List<Employee> getByFirstNameContainingIgnoreCaseNQ(String firstName);
 
-@Query("select e from Employee e where lower(e.firstName) like lower(concat('%', ?1, '%'))")
-List<Employee> getByFirstNameContainingIgnoreCaseJPQL(String firstName);
+    // JPQL query
+    @Query("select e from Employee e where lower(e.firstName) = lower(?1)")
+    List<Employee> getByFirstNameIgnoreCaseJPQL(String firstName);
+
+    @Query("select e from Employee e where lower(e.firstName) like lower(concat('%', ?1, '%'))")
+    List<Employee> getByFirstNameContainingIgnoreCaseJPQL(String firstName);
+}
 ```
 
 ### Câu 9:
@@ -187,7 +195,7 @@ Trả lời:
 1. @NamedQuery : sử dụng để định nghĩa truy vấn đã được đặt tên trong đối tượng Entity.
 
 ```java
-@NamedQuery(
+@NamedQuery(    
         name = "findEmployeeById",
         query = "from Employee where id = ?1"
 )
