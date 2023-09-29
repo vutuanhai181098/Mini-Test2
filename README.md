@@ -170,14 +170,14 @@ List<Employee> findByFirstNameContainingIgnoreCase(String firstName);
 @Query(nativeQuery = true, value = "select * from employee e where lower(e.firstName) = lower(?1)")
 List<Employee> getByFirstNameIgnoreCaseNQ(String firstName);
 
-@Query(nativeQuery = true, value = "select * from employee e where lower(e.firstName) like lower(?1)")
+@Query(nativeQuery = true, value = "select * from employee e where lower(e.firstName) like lower(concat('%', ?1, '%'))")
 List<Employee> getByFirstNameContainingIgnoreCaseNQ(String firstName);
 
 // JPQL query
 @Query("select e from Employee e where lower(e.firstName) = lower(?1)")
 List<Employee> getByFirstNameIgnoreCaseJPQL(String firstName);
 
-@Query("select e from Employee e where lower(e.firstName) like lower(?1)")
+@Query("select e from Employee e where lower(e.firstName) like lower(concat('%', ?1, '%'))")
 List<Employee> getByFirstNameContainingIgnoreCaseJPQL(String firstName);
 ```
 
