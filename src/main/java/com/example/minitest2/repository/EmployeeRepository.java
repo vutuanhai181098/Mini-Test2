@@ -40,11 +40,11 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     // Native query
     @Query(nativeQuery = true, value = "select * from employee e where e.lastName = ?1 order by e.firstName asc")
-    List<Employee> getByLastNameOrOrderByFirstNameAscNQ(String lastName);
+    List<Employee> getByLastNameOrderByFirstNameAscNQ(String lastName);
 
     // JPQL query
     @Query("select e from Employee e where e.lastName = ?1 order by e.firstName asc")
-    List<Employee> getByLastNameOrOrderByFirstNameAscJPQL(String lastName);
+    List<Employee> getByLastNameOrderByFirstNameAscJPQL(String lastName);
 
     // 4. Tìm tất cả các Employee theo fistName không phân biệt hoa thường.
     // Method query
@@ -56,14 +56,14 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     // Native query
     @Query(nativeQuery = true, value = "select * from employee e where lower(e.firstName) = lower(?1)")
     List<Employee> getByFirstNameIgnoreCaseNQ(String firstName);
-    @Query(nativeQuery = true, value = "select * from employee e where lower(e.firstName) like lower(?1)")
+    @Query(nativeQuery = true, value = "select * from employee e where lower(e.firstName) like lower(concat('%', ?1, '%'))")
     List<Employee> getByFirstNameContainingIgnoreCaseNQ(String firstName);
 
     // JPQL query
     @Query("select e from Employee e where lower(e.firstName) = lower(?1)")
     List<Employee> getByFirstNameIgnoreCaseJPQL(String firstName);
 
-    @Query("select e from Employee e where lower(e.firstName) like lower(?1)")
+    @Query("select e from Employee e where lower(e.firstName) like lower(concat('%', ?1, '%'))")
     List<Employee> getByFirstNameContainingIgnoreCaseJPQL(String firstName);
 
     // Named query

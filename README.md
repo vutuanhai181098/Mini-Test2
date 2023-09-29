@@ -148,15 +148,15 @@ List<Employee> getDistinctByFirstNameOrLastNameJPQL(String firstName, String las
 3. Tìm tất cả các Employee theo lastName và sắp xếp thứ tự theo firstName tăng dần.
 ```java
 // Method query
-List<Employee> findByLastNameOrOrderByFirstNameAsc(String lastName);
+List<Employee> findByLastNameOrderByFirstNameAsc(String lastName);
 
 // Native query
 @Query(nativeQuery = true, value = "select * from employee e where e.lastName = ?1 order by e.firstName asc")
-List<Employee> getByLastNameOrOrderByFirstNameAscNQ(String lastName);
+List<Employee> getByLastNameOrderByFirstNameAscNQ(String lastName);
 
 // JPQL query
 @Query("select e from Employee e where e.lastName = ?1 order by e.firstName asc")
-List<Employee> getByLastNameOrOrderByFirstNameAscJPQL(String lastName);
+List<Employee> getByLastNameOrderByFirstNameAscJPQL(String lastName);
 ```
 4. Tìm tất cả các Employee theo fistName không phân biệt hoa thường.
 ```java
